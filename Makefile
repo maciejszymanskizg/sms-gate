@@ -4,29 +4,35 @@ LD ?= ld
 STRIP ?= strip
 ECHO = @
 
-SRCS_CONFIGURATION=$(wildcard configuration/*.c)
-SRCS_CORE=$(wildcard core/*.c)
-SRCS_UTILS=$(wildcard utils/*.c)
+CSRCS_CONFIGURATION=$(wildcard configuration/*.c)
+CSRCS_CORE=$(wildcard core/*.c)
+CSRCS_UTILS=$(wildcard utils/*.c)
+CPPSRCS_CONFIGURATION=$(wildcard configuration/*.cpp)
+CPPSRCS_CORE=$(wildcard core/*.cpp)
+CPPSRCS_UTILS=$(wildcard utils/*.cpp)
 
-SRCS := $(SRCS_CONFIGURATION) $(SRCS_CORE) $(SRCS_UTILS)
+CSRCS := $(CSRCS_CONFIGURATION) $(CSRCS_CORE) $(CSRCS_UTILS)
+CPPSRCS += $(CPPSRCS_CONFIGURATION) $(CPPSRCS_CORE) $(CPPSRCS_UTILS)
 
-OBJS_CONFIGURATION=$(patsubst configuration/%.c,configuration/%.o,$(SRCS_CONFIGURATION))
-OBJS_CORE=$(patsubst core/%.c,core/%.o,$(SRCS_CORE))
-OBJS_UTILS=$(patsubst utils/%.c,utils/%.o,$(SRCS_UTILS))
+OBJS := $(patsubst %.c,%.o,$(CSRCS)) $(patsubst %.cpp,%.o,$(CPPSRCS))
 
-OBJS := $(OBJS_CONFIGURATION) $(OBJS_CORE) $(OBJS_UTILS)
-
+CFLAGS=-I./configuration -I./core -I./utils -Wall
+LDFLAGS=-pthread
 OUTPUT=sms-gate
 
 all: $(OUTPUT)
 
 %.o: %.c
 	@echo "Compiling \033[1;32m$@\033[0m from \033[32m$<\033[0m ..."
-	$(ECHO)$(CC) -c $< -o $@
+	$(ECHO)$(CC) $(CFLAGS) -c $< -o $@
 
-$(OUTPUT): $(OBJS_CONFIGURATION) $(OBJS_CORE) $(OBJS_UTILS)
-	@echo "Linking output \033[1;33m$@\033[0m ..."
-	$(ECHO)$(CC) $^ -o $@
+%.o: %.cpp
+	@echo "Compiling \033[1;32m$@\033[0m from \033[32m$<\033[0m ..."
+	$(ECHO)$(CXX) $(CFLAGS) -c $< -o $@
+
+$(OUTPUT): $(OBJS)
+	@echo "Linking output \033[1;33m$@\033[0m from \033[34m$^\033[0m ..."
+	$(ECHO)$(CXX) $(LDFLAGS) $^ -o $@
 
 clean:
 	@echo "Cleaning."
