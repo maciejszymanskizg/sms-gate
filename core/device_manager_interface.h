@@ -7,10 +7,11 @@
 
 typedef int32_t (*initialize_f)(void);
 typedef int32_t (*deinitialize_f)(void);
-typedef int32_t (*enumerate_f)(uint32_t *items_count, dm_item_t *items);
+typedef int32_t (*enumerate_f)(dm_items_t *items);
 typedef int32_t (*register_callback_f)(add_remove_callback_f callback, void *user_data);
 
 typedef struct {
+	uint32_t						iface_unique_id;
 	const char          iface_name[DM_IFACE_NAME_MAX_LEN];
 	dm_iface_type_t     iface_type;
 	initialize_f        iface_initialize;
