@@ -106,43 +106,45 @@ int32_t DM_Deinitialize(void)
 
 int32_t DM_RegisterIface(const dm_iface_t *iface)
 {
-	int32_t res = -1;
-	std::map<uint32_t, dm_iface_t *>::const_iterator it;
+	int32_t res = 0;
 
 	if (iface != NULL) {
-
+		std::map<uint32_t, dm_iface_t *>::const_iterator it;
 		sem_wait(&dm_sem);
+
 		for (it = dm_ifaces.begin(); it != dm_ifaces.end(); it++) {
 			if (strcmp(it->second->iface_name, iface->iface_name) == 0) {
 				/* found interface with same name already registered */
 				DBG_Error("%s: Interface with name [%s] already found.\n", __func__, iface->iface_name);
+				res = -1;
 				break;
 			}
 		}
 
 		if (res != -1) {
 			/* at first enumerate available items */
-			if (iface->iface_initialize(&dm_iface_id) == 0) {
+			if (iface->iface_initialize(dm_iface_id) == 0) {
 				if (iface->iface_register_callback(DM_Callback, NULL) == 0) {
 					dm_items_t items;
 
 					if (iface->iface_enumerate(&items) == 0) {
-						dm_iface_t *dm_iface = (dm_iface_t *) malloc(sizeof(dm_iface_t *));
+						dm_iface_t *dm_iface = (dm_iface_t *) malloc(sizeof(dm_iface_t));
 
 						if (dm_iface != NULL) {
 							uint32_t i = 0;
 
+							DBG_Info("%s: Got initial %u items from iface [%s].\n", __func__,
+									items.items_count, iface->iface_name);
 							for (i = 0; i < items.items_count; i++) {
 								dm_item_t *item = items.items[i];
 								dm_items.push_back(item);
 							}
 
 							memcpy(dm_iface, iface, sizeof(dm_iface_t));
-							DBG_Info("%s: Registering interface %p with name [%s].\n", __func__,
-									dm_iface, dm_iface->iface_name);
+							DBG_Info("%s: Registering interface %p with name [%s] as id %u.\n", __func__,
+									dm_iface, dm_iface->iface_name, dm_iface_id);
 							dm_ifaces.insert(std::make_pair<uint32_t, dm_iface_t *>(dm_iface_id, dm_iface));
 							dm_iface_id++;
-								res = 0;
 						}
 						else {
 							DBG_Error("%s: Memory allocation error.\n", __func__);
@@ -158,15 +160,18 @@ int32_t DM_RegisterIface(const dm_iface_t *iface)
 					else {
 						DBG_Error("%s: Enumeration error on iface [%s].\n", __func__, iface->iface_name);
 						iface->iface_deinitialize();
+						res = -1;
 					}
 				}
 				else {
 					DBG_Error("%s: Callback registration error on iface [%s].\n", __func__, iface->iface_name);
 					iface->iface_deinitialize();
+					res = -1;
 				}
 			}
 			else {
 				DBG_Error("%s: Iface initialization error on [%s].\n", __func__, iface->iface_name);
+				res = -1;
 			}
 		}
 

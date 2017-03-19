@@ -8,17 +8,19 @@ OUTPUT=sms-gate
 
 CSRCS_CONFIGURATION=$(wildcard configuration/*.c)
 CSRCS_CORE=$(wildcard core/*.c)
+CSRCS_IFACES=$(wildcard core/interface/*.c)
 CSRCS_UTILS=$(wildcard utils/*.c)
 CPPSRCS_CONFIGURATION=$(wildcard configuration/*.cpp)
 CPPSRCS_CORE=$(wildcard core/*.cpp)
+CPPSRCS_IFACES=$(wildcard core/interface/*.cpp)
 CPPSRCS_UTILS=$(wildcard utils/*.cpp)
 
-CSRCS := $(CSRCS_CONFIGURATION) $(CSRCS_CORE) $(CSRCS_UTILS)
-CPPSRCS += $(CPPSRCS_CONFIGURATION) $(CPPSRCS_CORE) $(CPPSRCS_UTILS)
+CSRCS := $(CSRCS_CONFIGURATION) $(CSRCS_CORE) $(CSRCS_IFACES) $(CSRCS_UTILS)
+CPPSRCS += $(CPPSRCS_CONFIGURATION) $(CPPSRCS_CORE) $(CPPSRCS_IFACES) $(CPPSRCS_UTILS)
 
 OBJS := $(patsubst %.c,%.o,$(CSRCS)) $(patsubst %.cpp,%.o,$(CPPSRCS))
 
-CFLAGS=-I./configuration -I./core -I./utils -Wall
+CFLAGS=-I./configuration -I./core -I./core/interface -I./utils -Wall
 LDFLAGS=-pthread -Wl,-Map,$(OUTPUT).map
 
 all: $(OUTPUT)

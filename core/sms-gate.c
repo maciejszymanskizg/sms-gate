@@ -8,10 +8,18 @@
 #define SMS_GATE_VERSION_MAJOR 0
 #define SMS_GATE_VERSION_MINOR 1
 
+extern dm_iface_t usb_iface;
+
 static void SG_HandleSignal(int signum)
 {
 	DM_Deinitialize();
 	exit(EXIT_SUCCESS);
+}
+
+static void SG_RegisterInterfaces(void)
+{
+	DBG_Info("Registering interfaces...\n");
+	DM_RegisterIface(&usb_iface);
 }
 
 int main(int argc, char *argv[])
@@ -24,6 +32,8 @@ int main(int argc, char *argv[])
 			SMS_GATE_VERSION_MINOR, __DATE__, __TIME__);
 
 	if (DM_Initialize() == 0) {
+		SG_RegisterInterfaces();
+
 		DBG_Info("Entering endless loop...\n");
 		/* Enter endless loop */
 		while (1) {

@@ -5,7 +5,7 @@
 
 #define DM_IFACE_NAME_MAX_LEN	32
 
-typedef int32_t (*initialize_f)(uint32_t *id);
+typedef int32_t (*initialize_f)(uint32_t id);
 typedef int32_t (*deinitialize_f)(void);
 typedef int32_t (*enumerate_f)(dm_items_t *items);
 typedef int32_t (*register_callback_f)(add_remove_callback_f callback, void *user_data);
