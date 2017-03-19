@@ -4,6 +4,8 @@ LD ?= ld
 STRIP ?= strip
 ECHO = @
 
+OUTPUT=sms-gate
+
 CSRCS_CONFIGURATION=$(wildcard configuration/*.c)
 CSRCS_CORE=$(wildcard core/*.c)
 CSRCS_UTILS=$(wildcard utils/*.c)
@@ -17,8 +19,7 @@ CPPSRCS += $(CPPSRCS_CONFIGURATION) $(CPPSRCS_CORE) $(CPPSRCS_UTILS)
 OBJS := $(patsubst %.c,%.o,$(CSRCS)) $(patsubst %.cpp,%.o,$(CPPSRCS))
 
 CFLAGS=-I./configuration -I./core -I./utils -Wall
-LDFLAGS=-pthread
-OUTPUT=sms-gate
+LDFLAGS=-pthread -Wl,-Map,$(OUTPUT).map
 
 all: $(OUTPUT)
 
@@ -33,7 +34,9 @@ all: $(OUTPUT)
 $(OUTPUT): $(OBJS)
 	@echo "Linking output \033[1;33m$@\033[0m from \033[34m$^\033[0m ..."
 	$(ECHO)$(CXX) $(LDFLAGS) $^ -o $@
+	@echo "Striping output \033[1;33m$@\033[0m from \033[34m$^\033[0m ..."
+	$(ECHO)$(STRIP) $@
 
 clean:
 	@echo "Cleaning."
-	@rm -rf $(OUTPUT) $(OBJS)
+	@rm -rf $(OUTPUT) $(OUTPUT).map $(OBJS)

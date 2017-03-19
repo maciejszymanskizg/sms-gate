@@ -11,7 +11,7 @@ extern "C" {
 int32_t DM_Initialize(void);
 int32_t DM_Deinitialize(void);
 int32_t DM_RegisterIface(const dm_iface_t *iface);
-int32_t DM_UnregisterIface(uint32_t iface_unique_id);
+int32_t DM_UnregisterIface(const char *iface_name);
 
 #ifdef __cplusplus
 }

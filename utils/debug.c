@@ -41,7 +41,7 @@ static debug_conf_t debug_conf = {
   .std_file_ptr = NULL,
   .output_file_ptr = NULL,
   .output_file_severity = (unsigned int) DEBUG_SEVERITY_NONE,
-  .std_severity = (unsigned int) DEBUG_SEVERITY_ERROR
+  .std_severity = (unsigned int) (DEBUG_SEVERITY_ERROR | DEBUG_SEVERITY_WARNING | DEBUG_SEVERITY_INFO),
 };
 
 
