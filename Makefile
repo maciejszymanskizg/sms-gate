@@ -1,7 +1,7 @@
-CC ?= gcc
-CXX ?= g++
-LD ?= ld
-STRIP ?= strip
+CC = gcc
+CXX = g++
+LD = ld
+STRIP = strip
 ECHO = @
 
 OUTPUT=sms-gate
@@ -20,8 +20,8 @@ CPPSRCS += $(CPPSRCS_CONFIGURATION) $(CPPSRCS_CORE) $(CPPSRCS_IFACES) $(CPPSRCS_
 
 OBJS := $(patsubst %.c,%.o,$(CSRCS)) $(patsubst %.cpp,%.o,$(CPPSRCS))
 
-CFLAGS=-I./configuration -I./core -I./core/interface -I./utils -Wall
-LDFLAGS=-pthread -Wl,-Map,$(OUTPUT).map
+CFLAGS=-I./configuration -I./core -I./core/interface -I./utils -Wall -fno-omit-frame-pointer -D_GNU_SOURCE
+LDFLAGS=-pthread -ludev -Wl,-Map,$(OUTPUT).map
 
 all: $(OUTPUT)
 
@@ -35,7 +35,7 @@ all: $(OUTPUT)
 
 $(OUTPUT): $(OBJS)
 	@echo "Linking output \033[1;33m$@\033[0m from \033[34m$^\033[0m ..."
-	$(ECHO)$(CXX) $(LDFLAGS) $^ -o $@
+	$(ECHO)$(CXX) $^ $(LDFLAGS) -o $@
 	@echo "Striping output \033[1;33m$@\033[0m from \033[34m$^\033[0m ..."
 	$(ECHO)$(STRIP) $@
 

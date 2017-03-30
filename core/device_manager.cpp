@@ -1,3 +1,16 @@
+/**************************************************************************************
+ *
+ * Strictly internal and proprietary.
+ *
+ * Definition:  Device Manager module
+ *
+ * Author:      Maciej Szymanski (maciej.szymanski.zg@gmail.com)
+ * Contributor:
+ *
+ * Copyright: Maciej Szymanski
+ *
+ *************************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

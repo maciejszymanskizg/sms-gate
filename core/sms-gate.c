@@ -1,14 +1,26 @@
+/**************************************************************************************
+ *
+ * Strictly internal and proprietary.
+ *
+ * Definition:  SMS Gate main code
+ *
+ * Author:      Maciej Szymanski (maciej.szymanski.zg@gmail.com)
+ * Contributor:
+ *
+ * Copyright: Maciej Szymanski
+ *
+ *************************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
+#include "usb_iface.h"
 #include "device_manager.h"
 #include "debug.h"
 
 #define SMS_GATE_VERSION_MAJOR 0
 #define SMS_GATE_VERSION_MINOR 1
-
-extern dm_iface_t usb_iface;
 
 static void SG_HandleSignal(int signum)
 {

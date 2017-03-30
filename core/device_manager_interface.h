@@ -11,7 +11,7 @@ typedef int32_t (*enumerate_f)(dm_items_t *items);
 typedef int32_t (*register_callback_f)(add_remove_callback_f callback, void *user_data);
 
 typedef struct {
-	const char          iface_name[DM_IFACE_NAME_MAX_LEN];
+	char                iface_name[DM_IFACE_NAME_MAX_LEN];
 	dm_iface_type_t     iface_type;
 	initialize_f        iface_initialize;
 	deinitialize_f      iface_deinitialize;
